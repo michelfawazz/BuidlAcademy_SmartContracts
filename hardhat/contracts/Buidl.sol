@@ -88,30 +88,19 @@ contract Buidl is Context, Ownable {
     //create a function to create a course
     function createCourse(
         string memory _name,
-        uint256 _price,
-        uint256 _courseId
+        uint256 _price
     ) public {
         require(
             whiteListCourseCreators[_msgSender()] == true,
             "You are not whitelisted to create courses"
         );
+
+        uint256 _courseId = courseCounter;
         //require that the course at the id does not exist
         require(courses[_courseId].id == 0, "Course already exists");
 
-        // courseCounter++;
-        //create a new course
-        // Course memory newCourse = Course({
-        //     owner: _msgSender(),
-        //     name: _name,
-        //     id: _courseId,
-        //     price: _price,
-        //     courseCount: courseCounter,
-        //     amountGeneratedStable: 0,
-        //     amountGeneratedMatic: 0,
-        //     Buyers: new mapping(address => bool)
-        // });
-
-        //courses[_courseId] = newCourse;
+        
+        
         courses[_courseId].owner = _msgSender();
         courses[_courseId].name = _name;
         courses[_courseId].id = _courseId;
@@ -122,6 +111,7 @@ contract Buidl is Context, Ownable {
 
         //add the course to the owner
         ownerToCourses[_msgSender()].push(_courseId);
+        courseCounter++;
     }
 
     //create a function to transfer the ownership of the course
@@ -451,6 +441,11 @@ contract Buidl is Context, Ownable {
         returns (bool)
     {
         return whiteListCourseCreators[_courseCreator];
+    }
+
+    //get current course count
+    function getCourseCount() public view returns (uint256) {
+        return courseCounter;
     }
 
     //ONLY OWNER FUNCTIONS//
